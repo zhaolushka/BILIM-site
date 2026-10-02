@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Контент-план BILIM</title>
+<style id="s">
+/* Layout: красная шапка с подсказкой и счётчиками → панель фильтров → недели, внутри белые карточки с красными акцентами; правка в окне поверх страницы. Одна светлая тема: белое + красное */
+:root{
+  color-scheme:light;
+  --bg:#ffffff;--soft:#fff1f1;--fg:#1a1112;--muted:#6b5a5c;--line:#f1d6d8;
+  --red:#e30613;--red-dark:#a8000b;--red-fg:#ffffff;--accent:#e30613;--ok:#13914a;--ok-soft:#e5f5ec;--warn:#e30613;--warn-soft:#fff1f1;
+  --reels:#e30613;--carousel:#1a1112;--stories:#ff5a5f;--other:#a8000b;
+  --f-display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.45;padding:0 16px}
+.wrap{max-width:1040px;margin:0 auto;padding-block:20px 100px}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.hero{background:var(--red);color:var(--red-fg);border-radius:22px;padding:24px;display:grid;gap:18px}
+.hero h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,40px);line-height:1.05;margin:0;letter-spacing:-.02em;text-wrap:balance}
+.hero p{margin:4px 0 0;font-size:15px}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.step{background:var(--bg);color:var(--fg);border-radius:14px;padding:12px 14px;font-size:14px;min-width:0}
+.step b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--red);color:var(--red-fg);font-size:13px;margin-right:6px}
+.tiles{display:flex;flex-wrap:wrap;gap:10px}
+.tile{background:var(--red-dark);color:var(--red-fg);border-radius:14px;padding:8px 14px;font-size:13px}
+.tile strong{font-family:var(--f-display);font-size:22px;margin-right:6px;font-variant-numeric:tabular-nums}
+.addbig{justify-self:start;border:0;background:var(--bg);color:var(--red);font-weight:700;font-size:16px;padding:14px 22px;border-radius:14px}
+.addbig:hover{transform:translateY(-1px)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-bottom:2px solid var(--line)}
+.chip{border:2px solid var(--line);background:var(--bg);padding:6px 13px;border-radius:999px;font-size:14px;font-weight:600}
+.chip[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:var(--red-fg)}
+.chip .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--c);margin-right:6px}
+.sp{flex:1}
+.toast{font-size:13px;font-weight:600;color:var(--ok)}
+.toast.err{color:var(--warn)}
+.ro{margin-top:14px;background:var(--warn-soft);color:var(--warn);padding:12px 14px;border-radius:12px;font-weight:600}
+.week{margin-top:26px}
+.week h2{color:var(--red-dark);font-family:var(--f-display);font-size:17px;margin:0 0 12px;font-weight:700}
+.week h2 span{color:var(--muted);font-family:var(--f-body);font-weight:500;font-size:14px;margin-left:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.card{position:relative;background:var(--bg);border:2px solid var(--line);border-top:6px solid var(--c);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0;text-align:left;width:100%}
+.card:hover{border-color:var(--c)}
+.card.past{opacity:.6}
+.top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fmt{background:var(--c);color:#fff;font-weight:700;font-size:12px;padding:4px 10px;border-radius:999px;letter-spacing:.02em}
+.when{font-weight:700;font-size:14px}
+.when small{color:var(--muted);font-weight:500;margin-left:4px}
+.today{background:var(--red);color:var(--red-fg);font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;text-transform:uppercase}
+.title{font-size:18px;font-weight:700;line-height:1.25;margin:0;text-wrap:balance;overflow-wrap:anywhere}
+.rub{font-size:13px;color:var(--c);font-weight:700}
+.who{font-size:14px;color:var(--muted);overflow-wrap:anywhere}
+.who b{color:var(--fg);font-weight:600}
+.ref{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:auto}
+.has{background:var(--red);color:var(--red-fg);font-weight:700;font-size:13px;padding:7px 12px;border-radius:10px;text-decoration:none}
+.need{border:2px dashed var(--warn);background:var(--warn-soft);color:var(--warn);font-weight:700;font-size:13px;padding:6px 12px;border-radius:10px}
+.take{font-size:13px;background:var(--soft);border-radius:10px;padding:8px 10px;overflow-wrap:anywhere}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.st{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--soft);color:var(--sc,var(--muted))}
+.edit{border:0;background:var(--soft);color:var(--red-dark);font-weight:700;font-size:13px;padding:7px 12px;border-radius:10px}
+.edit:hover{background:var(--red);color:var(--red-fg)}
+.empty{margin-top:40px;text-align:center;color:var(--muted)}
+.ov{position:fixed;inset:0;background:rgba(10,11,16,.55);z-index:20;display:grid;place-items:center;padding:16px}
+.modal{background:var(--bg);color:var(--fg);border-radius:22px;width:min(560px,100%);max-height:calc(100% - 32px);overflow:auto;padding:22px;display:grid;gap:14px}
+.modal h3{font-family:var(--f-display);margin:0;font-size:20px}
+.f{display:grid;gap:5px;font-weight:700;font-size:14px;min-width:0}
+.f em{font-style:normal;font-weight:400;color:var(--muted);font-size:13px}
+.f input,.f textarea{font:inherit;font-weight:400;color:var(--fg);background:var(--soft);border:2px solid var(--line);border-radius:12px;padding:10px 12px;width:100%;min-width:0}
+.f input:focus,.f textarea:focus{border-color:var(--accent);outline:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{border:2px solid var(--line);background:var(--bg);border-radius:10px;padding:7px 11px;font-size:14px;font-weight:600}
+.seg button[aria-pressed="true"]{background:var(--c,var(--fg));border-color:var(--c,var(--fg));color:#fff}
+.mact{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.primary{border:0;background:var(--accent);color:#fff;font-weight:700;padding:12px 20px;border-radius:12px;font-size:15px}
+.primary:disabled{opacity:.5}
+.ghost{border:2px solid var(--line);background:var(--bg);font-weight:600;padding:10px 16px;border-radius:12px}
+.del{border:0;background:none;color:var(--warn);font-weight:700;padding:10px 4px;margin-left:auto}
+.confirm{background:var(--warn-soft);color:var(--warn);border-radius:12px;padding:10px 12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-weight:600}
+.confirm button{border:0;border-radius:10px;padding:7px 12px;font-weight:700}
+.confirm .yes{background:var(--warn);color:#fff}
+.merr{color:var(--warn);font-weight:600;font-size:14px}
+@media (max-width:640px){.steps{grid-template-columns:1fr}.row2{grid-template-columns:1fr}.hero{padding:18px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;transform:none!important}}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@700;800&display=swap">
+<div id="app"></div>
+<script type="application/json" id="state">{"rows": [{"d": "2026-10-02", "f": "Reels", "r": "Обзор школы", "t": "Экскурсия по центру за 30 секунд", "who": "Один ученик поёт \"I just woke up from a dream..\"", "ref": "https://www.instagram.com/reel/Dc_LAbIKtmr/", "take": "", "st": "Идея", "id": "p00"}, {"d": "2026-10-02", "f": "Reels", "r": "Репортаж", "t": "Интервью с IT конференции", "who": "Спикеры, родители, дети (можно выбрать одного)", "ref": "", "take": "", "st": "Идея", "id": "p01"}, {"d": "2026-10-08", "f": "Карусель", "r": "Путь ученика", "t": "Путь ученика: 9 шагов от теста до расписания", "who": "Фото: ребёнок + консультант + бухгалтер", "ref": "", "take": "", "st": "Идея", "id": "p02"}, {"d": "2026-10-12", "f": "Reels", "r": "Teacher vs Student", "t": "кто победит?", "who": "Учитель английского + 1 ребёнок", "ref": "", "take": "", "st": "Идея", "id": "p03"}, {"d": "2026-10-13", "f": "Карусель", "r": "Родителям о главном", "t": "Pre-OSSD или OSSD: в какой класс идти", "who": "Без съёмки (дизайн)", "ref": "", "take": "", "st": "Идея", "id": "p04"}, {"d": "2026-10-14", "f": "Карусель", "r": "Built for More", "t": "Кейс выпускницы: от выбора вуза до offers", "who": "Выпускница", "ref": "", "take": "", "st": "Идея", "id": "p05"}, {"d": "2026-10-16", "f": "Reels", "r": "BILIM Abroad", "t": "Китай 2026: что внутри программы", "who": "Архив прошлых поездок + куратор", "ref": "", "take": "", "st": "Идея", "id": "p06"}, {"d": "2026-10-19", "f": "Reels", "r": "Skills Lab", "t": "Как подготовиться к MUN", "who": "Дети (делегат MUN)", "ref": "", "take": "", "st": "Идея", "id": "p07"}, {"d": "2026-10-20", "f": "Карусель", "r": "Skills Lab", "t": "Гайд MUN: 7 шагов + шаблон речи", "who": "Без съёмки (дизайн)", "ref": "", "take": "", "st": "Идея", "id": "p08"}, {"d": "2026-10-23", "f": "Reels/Карусель", "r": "BILIM Abroad", "t": "Что подросток берёт в поездку", "who": "Дети (3–4 участника поездки)", "ref": "", "take": "", "st": "Идея", "id": "p09"}, {"d": "2026-10-27", "f": "Карусель", "r": "Built for More", "t": "Куда поступили выпускники 2026", "who": "Без съёмки (дизайн)", "ref": "", "take": "", "st": "Идея", "id": "p10"}, {"d": "2026-10-30", "f": "Карусель", "r": "BILIM Abroad", "t": "Фотодамп первой недели в Китае", "who": "Дети (фото)", "ref": "", "take": "", "st": "Идея", "id": "p11"}, {"d": "2026-11-03", "f": "Карусель", "r": "Голоса BILIM", "t": "5 сомнений родителей и честные ответы", "who": "Без съёмки (дизайн)", "ref": "", "take": "", "st": "Идея", "id": "p12"}, {"d": "2026-11-04", "f": "Reels", "r": "Голоса BILIM", "t": "Трейлер подкаста BILIM Talks", "who": "Ведущий + выпускник/преподаватель", "ref": "", "take": "", "st": "Идея", "id": "p13"}, {"d": "2026-11-05", "f": "Карусель", "r": "Голоса BILIM", "t": "Alumni Talks", "who": "Без съёмки (дизайн)", "ref": "", "take": "", "st": "Идея", "id": "p14"}, {"d": "2026-11-06", "f": "Reels", "r": "BILIM Abroad", "t": "Кем хотел стать до и после поездки", "who": "Дети (ответ «до» снять 20.10)", "ref": "", "take": "", "st": "Идея", "id": "p15"}]}</script>
+<script id="main">
+(function(){
+const S=JSON.parse(document.getElementById('state').textContent);
+const MON=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+const MONF=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+const DOW=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+const FMTS=['Reels','Карусель','Сторис','Reels/Карусель','Пост'];
+const FC={'Reels':'--reels','Карусель':'--carousel','Сторис':'--stories'};
+const STS=['Идея','Съёмка','Монтаж','Готово','Вышло'];
+const SC={'Идея':'--muted','Съёмка':'--stories','Монтаж':'--other','Готово':'--red','Вышло':'--ok'};
+const fc=f=>`var(${FC[f]||'--other'})`;
+let filt={f:'Все',miss:false},canWrite=true,artifact=null,busy=false,modal=null,toast='';
+const app=document.getElementById('app');
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const isUrl=s=>/^https?:\/\/\S+$/i.test((s||'').trim());
+const pd=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const todayIso=iso(new Date());
+const monday=s=>{const d=pd(s);const k=(d.getDay()+6)%7;d.setDate(d.getDate()-k);return d};
+let showHelp=true;try{showHelp=localStorage.getItem('bilim-help')!=='0'}catch(e){}
+
+function render(){
+  const rows=S.rows.slice().sort((a,b)=>a.d<b.d?-1:a.d>b.d?1:0);
+  const total=rows.length,withRef=rows.filter(r=>r.ref.trim()).length,done=rows.filter(r=>r.st==='Готово'||r.st==='Вышло').length;
+  let h=`<div class="wrap"><header class="hero"><div><h1>Контент-план BILIM</h1><p>Октябрь – ноябрь 2026. Здесь вся команда видит, что и когда выходит.</p></div>`;
+  if(showHelp) h+=`<div class="steps"><div class="step"><b>1</b>Нажмите <strong>«Изменить»</strong> на карточке поста</div><div class="step"><b>2</b>Вставьте ссылку на пример, поменяйте статус или текст</div><div class="step"><b>3</b>Нажмите <strong>«Сохранить»</strong>. Изменения сохранятся в этом браузере</div></div>`;
+  h+=`<div class="tiles"><div class="tile"><strong>${total}</strong>постов</div><div class="tile"><strong>${withRef}</strong>с примером</div><div class="tile"><strong>${done}</strong>готово</div></div>`;
+  if(canWrite) h+=`<button class="addbig" data-act="add">+ Добавить пост</button>`;
+  h+=`</header>`;
+  if(!canWrite) h+=`<div class="ro">Сейчас вы только смотрите. Чтобы добавлять и менять посты, попросите владельца дать доступ на редактирование.</div>`;
+  h+=`<div class="bar">`+['Все',...FMTS.filter(f=>rows.some(r=>r.f===f))].map(f=>`<button class="chip" data-f="${esc(f)}" aria-pressed="${filt.f===f}" style="--c:${fc(f)}">${f==='Все'?'':'<span class="dot"></span>'}${esc(f)}</button>`).join('')+
+    `<button class="chip" data-miss="1" aria-pressed="${filt.miss}">Нет примера</button><span class="sp"></span>`+
+    `<button class="chip" data-act="help">${showHelp?'Скрыть подсказку':'Как пользоваться'}</button>`+
+    (toast?`<span class="toast${toast.startsWith('!')?' err':''}">${esc(toast.replace(/^!/,''))}</span>`:'')+`</div>`;
+  const list=rows.filter(r=>(filt.f==='Все'||r.f===filt.f)&&(!filt.miss||!r.ref.trim()));
+  if(!list.length) h+=`<div class="empty">${total?'Под этот фильтр ничего нет.':'Постов пока нет. Нажмите «+ Добавить пост».'}</div>`;
+  const weeks={};list.forEach(r=>{const k=iso(monday(r.d));(weeks[k]=weeks[k]||[]).push(r)});
+  Object.keys(weeks).sort().forEach(k=>{const a=pd(k),b=pd(k);b.setDate(b.getDate()+6);
+    h+=`<section class="week"><h2>${a.getDate()} ${a.getMonth()!==b.getMonth()?MON[a.getMonth()]+' ':''}– ${b.getDate()} ${MON[b.getMonth()]}<span>${weeks[k].length} ${plural(weeks[k].length)}</span></h2><div class="grid">`;
+    weeks[k].forEach(r=>{const d=pd(r.d);const past=r.d<todayIso&&r.st==='Вышло';
+      h+=`<article class="card${past?' past':''}" style="--c:${fc(r.f)}">
+        <div class="top"><span class="fmt">${esc(r.f)}</span><span class="when">${d.getDate()} ${MON[d.getMonth()]}<small>${DOW[d.getDay()]}</small></span>${r.d===todayIso?'<span class="today">сегодня</span>':''}</div>
+        ${r.r?`<div class="rub">${esc(r.r)}</div>`:''}
+        <h3 class="title">${esc(r.t)||'<span style="color:var(--muted)">Без темы</span>'}</h3>
+        ${r.who?`<div class="who"><b>Кого снимаем:</b> ${esc(r.who)}</div>`:''}
+        ${r.take?`<div class="take"><b>Что взять:</b> ${esc(r.take)}</div>`:''}
+        <div class="ref">${isUrl(r.ref)?`<a class="has" href="${esc(r.ref.trim())}" target="_blank" rel="noopener">▶ Смотреть пример</a>`:(canWrite?`<button class="need" data-act="edit" data-id="${r.id}" data-focus="ref">+ Добавить пример</button>`:'<span class="need">Нет примера</span>')}</div>
+        <div class="foot"><span class="st" style="--sc:var(${SC[r.st]||'--muted'})">● ${esc(r.st||'Идея')}</span>${canWrite?`<button class="edit" data-act="edit" data-id="${r.id}">Изменить</button>`:''}</div>
+      </article>`;});
+    h+=`</div></section>`;});
+  h+=`</div>`;
+  if(modal) h+=renderModal();
+  app.innerHTML=h;
+  if(modal&&modal.focus){const el=document.getElementById('m-'+modal.focus);if(el)el.focus();modal.focus=null;}
+}
+function plural(n){const a=n%10,b=n%100;return a===1&&b!==11?'пост':a>=2&&a<=4&&(b<10||b>=20)?'поста':'постов'}
+function renderModal(){const r=modal.r;const rubs=[...new Set(S.rows.map(x=>x.r).filter(Boolean))];
+  return `<div class="ov" data-act="close-ov"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
+  <h3 id="mt">${modal.isNew?'Новый пост':'Изменить пост'}</h3>
+  <div class="row2"><label class="f">Дата<input type="date" id="m-d" data-k="d" value="${esc(r.d)}"></label>
+  <label class="f">Рубрика<input id="m-r" data-k="r" list="rubs" value="${esc(r.r)}" placeholder="Например: Skills Lab"><datalist id="rubs">${rubs.map(x=>`<option value="${esc(x)}">`).join('')}</datalist></label></div>
+  <div class="f">Формат<div class="seg">${FMTS.map(f=>`<button type="button" data-set="f" data-v="${esc(f)}" aria-pressed="${r.f===f}" style="--c:${fc(f)}">${esc(f)}</button>`).join('')}</div></div>
+  <label class="f">Тема<input id="m-t" data-k="t" value="${esc(r.t)}" placeholder="О чём пост"></label>
+  <label class="f">Кого снимаем<input id="m-who" data-k="who" value="${esc(r.who)}" placeholder="Например: учитель + 1 ребёнок"></label>
+  <label class="f">Ссылка на пример <em>Instagram, TikTok, YouTube</em><input id="m-ref" data-k="ref" type="url" value="${esc(r.ref)}" placeholder="https://www.instagram.com/reel/..."></label>
+  <label class="f">Что взять из примера<textarea id="m-take" data-k="take" rows="2" placeholder="Формат, музыку, монтаж, идею">${esc(r.take)}</textarea></label>
+  <div class="f">Статус<div class="seg">${STS.map(s=>`<button type="button" data-set="st" data-v="${s}" aria-pressed="${r.st===s}" style="--c:var(${SC[s]})">${s}</button>`).join('')}</div></div>
+  ${modal.err?`<div class="merr">${esc(modal.err)}</div>`:''}
+  ${modal.confirm?`<div class="confirm">Удалить этот пост насовсем?<button class="yes" data-act="del-yes">Да, удалить</button><button data-act="del-no">Нет</button></div>`:''}
+  <div class="mact"><button class="primary" data-act="save" ${busy?'disabled':''}>${busy?'Сохраняю…':'Сохранить'}</button><button class="ghost" data-act="close">Отмена</button>${modal.isNew?'':'<button class="del" data-act="del">Удалить</button>'}</div>
+  </div></div>`;}
+function open(id,focus){const src=id?S.rows.find(x=>x.id===id):null;
+  modal={isNew:!src,id,r:src?{...src}:{id:'p'+Date.now().toString(36),d:todayIso,f:'Reels',r:'',t:'',who:'',ref:'',take:'',st:'Идея'},focus:focus||'t'};render();}
+function syncInputs(){if(!modal)return;app.querySelectorAll('.modal [data-k]').forEach(el=>{modal.r[el.dataset.k]=el.value})}
+app.addEventListener('click',e=>{
+  if(e.target.classList&&e.target.classList.contains('ov')){if(!busy){modal=null;render()}return}
+  const t=e.target.closest('button');if(!t)return;
+  if(t.dataset.f){filt.f=t.dataset.f;render();return}
+  if(t.dataset.miss){filt.miss=!filt.miss;render();return}
+  if(t.dataset.set){syncInputs();modal.r[t.dataset.set]=t.dataset.v;render();return}
+  const a=t.dataset.act;
+  if(a==='help'){showHelp=!showHelp;try{localStorage.setItem('bilim-help',showHelp?'1':'0')}catch(e){};render()}
+  else if(a==='add')open(null);
+  else if(a==='edit')open(t.dataset.id,t.dataset.focus);
+  else if(a==='close'){if(!busy){modal=null;render()}}
+  else if(a==='del'){syncInputs();modal.confirm=true;render()}
+  else if(a==='del-no'){syncInputs();modal.confirm=false;render()}
+  else if(a==='del-yes')commit(true);
+  else if(a==='save'){syncInputs();commit(false)}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal&&!busy){modal=null;render()}});
+function buildDoc(){
+  return '';const st=document.getElementById('s').outerHTML,mn=document.getElementById('main').outerHTML;
+  const fonts=document.querySelector('link[rel=stylesheet]').outerHTML;
+  const js=JSON.stringify(S).replace(/</g,'\\u003c');
+  return '<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.5 system-ui,-apple-system,sans-serif;background:#fafafa}img{max-width:100%}[hidden]{display:none!important}</style></head><body>'
+    +'<title>Контент-план BILIM</title>'+st+fonts+'<div id="app"></div><script type="application/json" id="state">'+js+'<\/script>'+mn+'</body></html>';
+}
+async function commit(isDelete){
+  if(!artifact){modal.err='Сохранение недоступно в этом окне. Откройте страницу по ссылке.';render();return}
+  const r=modal.r;
+  if(!isDelete&&!r.d){modal.err='Укажите дату.';render();return}
+  if(!isDelete&&!r.t.trim()){modal.err='Напишите тему поста.';modal.focus='t';render();return}
+  const backup=JSON.stringify(S.rows);
+  if(isDelete)S.rows=S.rows.filter(x=>x.id!==modal.id);
+  else{r.ref=r.ref.trim();const i=S.rows.findIndex(x=>x.id===r.id);if(i>=0)S.rows[i]=r;else S.rows.push(r)}
+  busy=true;render();
+  try{await artifact.publish(buildDoc());busy=false;modal=null;toast=isDelete?'Пост удалён':'Сохранено';render()}
+  catch(err){busy=false;S.rows=JSON.parse(backup);const c=err&&err.code;
+    if(c==='not_granted'||c==='not_writer'){canWrite=false;modal=null;render();return}
+    modal.err=c==='conflict'?'Кто-то сохранил раньше вас. Страница обновится, повторите правку.':'Не получилось сохранить. Проверьте интернет и попробуйте ещё раз.';render()}
+}
+try{const saved=localStorage.getItem('bilim-plan-rows');if(saved)S.rows=JSON.parse(saved)}catch(e){}
+artifact={publish:async()=>{localStorage.setItem('bilim-plan-rows',JSON.stringify(S.rows))}};
+render();
+})();
+</script>
+
+</body>
+</html>
